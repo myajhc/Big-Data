@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-deployment-init-configmap
+data:
+  mysql-init.sql: |
+    CREATE TABLE `missions` (
+      `mission
+      `VARCHAR(30) NOT NULL,
+      `description` VARCHAR(5000),
+      `heading` VARCHAR(1000),
+      PRIMARY KEY (`mission`)
+    );
+
+    CREATE TABLE `popular` (
+      `mission` VARCHAR(30) NOT NULL,
+      `count` BIGINT,
+      PRIMARY KEY (`mission`)
+    );
+
+# This is an excerpt of deployment.spec.template.spec
+  volumes:
+    - name: init-volume
+      configMap:
+        name: mysql-deployment-init-configmap
+  containers:
+    - name: my-mysql
+      image: mysql
+      volumeMounts:
+        - name: init-volume
+          mountPath: /docker-entrypoint-initdb.d/
