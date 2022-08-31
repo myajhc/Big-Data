@@ -4,19 +4,58 @@ metadata:
   name: mysql-deployment-init-configmap
 data:
   mysql-init.sql: |
-    CREATE TABLE `missions` (
-      `mission
-      `VARCHAR(30) NOT NULL,
-      `description` VARCHAR(5000),
-      `heading` VARCHAR(1000),
-      PRIMARY KEY (`mission`)
+    CREATE TABLE `country` (
+      `id` BIGINT NOT NULL,
+      `name` VARCHAR(200),
+      PRIMARY KEY (`id`)
     );
 
-    CREATE TABLE `popular` (
-      `mission` VARCHAR(30) NOT NULL,
-      `count` BIGINT,
-      PRIMARY KEY (`mission`)
+    CREATE TABLE `league` (
+      `id` BIGINT NOT NULL,
+      `country_id` BIGINT,
+      `name` VARCHAR(200),
+      PRIMARY KEY (`mission`),
+      FOREIGN KEY (`country_id`) REFERENCES `country`(`id`)
     );
+    
+    CREATE TABLE `match` (
+      `id` BIGINT NOT NULL,
+      `country_id` BIGINT,
+      `league_id` BIGINT,
+      `season` VARCHAR(200),
+      `stage` VARCHAR(200),
+      `date` DATE,
+      `match_api_id` BIGINT,
+      `home_team_api_id` BIGINT,
+      `away_team_api_id` BIGINT,
+      `home_team_goal` BIGINT,
+      `country_id` BIGINT,
+      PRIMARY KEY (`id`),
+      FOREIGN KEY (`league_id`) REFERENCES `league`(`id`)
+    );
+    
+    CREATE TABLE `player` (
+      `id` BIGINT NOT NULL,
+      `player_api_id` BIGINT,
+      `player_name` VARCHAR(200),
+      `birthday` DATE,
+      `stage` VARCHAR(200),
+      `date` DATE,
+      `height` DECIMAL(6),
+      `weight` DECIMAL(10),
+      PRIMARY KEY (`id`)
+    );
+    
+    CREATE TABLE `team` (
+      `id` BIGINT NOT NULL,
+      `team_api_id` BIGINT,
+      `team_long_name_name` VARCHAR(200),
+      `team_short_name_name` VARCHAR(200)
+      PRIMARY KEY (`id`)
+    );
+    
+     
+     
 
 # This is an excerpt of deployment.spec.template.spec
   volumes:
