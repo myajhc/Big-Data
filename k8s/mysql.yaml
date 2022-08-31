@@ -4,19 +4,113 @@ metadata:
   name: mysql-deployment-init-configmap
 data:
   mysql-init.sql: |
-    CREATE TABLE `missions` (
-      `mission
-      `VARCHAR(30) NOT NULL,
-      `description` VARCHAR(5000),
-      `heading` VARCHAR(1000),
-      PRIMARY KEY (`mission`)
+    CREATE TABLE `country` (
+      `id` BIGINT NOT NULL,
+      `name` VARCHAR(200),
+      PRIMARY KEY (`id`)
     );
 
-    CREATE TABLE `popular` (
-      `mission` VARCHAR(30) NOT NULL,
-      `count` BIGINT,
-      PRIMARY KEY (`mission`)
+    CREATE TABLE `league` (
+      `id` BIGINT NOT NULL,
+      `country_id` BIGINT,
+      `name` VARCHAR(200),
+      PRIMARY KEY (`mission`),
+      FOREIGN KEY (`country_id`) REFERENCES `country`(`id`)
     );
+    
+    CREATE TABLE `match` (
+      `id` BIGINT NOT NULL,
+      `country_id` BIGINT,
+      `league_id` BIGINT,
+      `season` VARCHAR(200),
+      `stage` VARCHAR(200),
+      `date` DATE,
+      `match_api_id` BIGINT,
+      `home_team_api_id` BIGINT,
+      `away_team_api_id` BIGINT,
+      `home_team_goal` BIGINT,
+      `country_id` BIGINT,
+      PRIMARY KEY (`id`),
+      FOREIGN KEY (`league_id`) REFERENCES `league`(`id`)
+    );
+    
+    CREATE TABLE `player` (
+      `id` BIGINT NOT NULL,
+      `player_api_id` BIGINT,
+      `player_name` VARCHAR(200),
+      `birthday` DATETIME,
+      `height` DECIMAL(6),
+      `weight` DECIMAL(10),
+      PRIMARY KEY (`id`)
+    );
+    
+    CREATE TABLE `team` (
+      `id` BIGINT NOT NULL,
+      `team_api_id` BIGINT,
+      `team_long_name_name` VARCHAR(200),
+      `team_short_name_name` VARCHAR(200)
+      PRIMARY KEY (`id`)
+    );
+
+INSERT INTO `country`
+VALUES (`1`, `Belgium`), 
+       (`1729`, `England`), 
+       (`4769`, `France`), 
+       (`7809`, `Germany`), 
+       (`10257`, `Italy`), 
+       (`13274`, `Netherlands`), 
+       (`15722`, `Poland`), 
+       (`17642`, `Portugal`), 
+       (`19694`, `Scotland`), 
+       (`21518`, `Spain`);
+
+INSERT INTO `league`
+VALUES (`1`, `1`, `Belgium Premier League`), 
+       (`1729`, `11729`, `England Premier League`), 
+       (`4769`, `4769`, `France League 1`), 
+       (`7809`, `7809`, `Germany 1. Bundesliga`), 
+       (`10257`, `1`0257, `Italy Serie A`), 
+       (`13274`, `13274`, `Netherlands Eredivisie`), 
+       (`15722`, `15722`, `Poland Ekstraklasa`), 
+       (`17642`, `17642`, `Portugal Liga ZON Sagres`), 
+       (`19694`, `19694`, `Scotland Premier League`), 
+       (`21518`, `21518`, `Spain LIGA BBVA`);
+
+INSERT INTO `match`
+VALUES (`1`, `1`, `1`, `2008/2009`, `1`, `2008-08-17 00:00:00`, `492473`, `9987`, `9993`, `1`), 
+       (`2`, `1`, `1`, `2008/2009`, `1`, `2008-08-16 00:00:00`, `492474`, `10000`, `9994`, `0`), 
+       (`3`, `1`, `1`, `2008/2009`, `1`, `2008-08-17 00:00:00`, `492475`, `9984`, `8635`, `0`), 
+       (`4`, `1`, `1`, `2008/2009`, `1`, `2008-08-17 00:00:00`, `492476`, `9991`, `9998`, `5`), 
+       (`5`, `1`, `1`, `2008/2009`, `1`, `2008-08-16 00:00:00`, `492477`, `7947`, `9985`, `1`), 
+       (`6`, `1`, `1`, `2008/2009`, `1`, `2008-09-24 00:00:00`, `492478`, `8203`, `8342`, `1`), 
+       (`7`, `1`, `1`, `2008/2009`, `1`, `2008-08-16 00:00:00`, `492479`, `9999`, `8571`, `2`), 
+       (`8`, `1`, `1`, `2008/2009`, `1`, `2008-08-16 00:00:00`, `492480`, `4049`, `9986`, `1`), 
+       (`9`, `1`, `1`, `2008/2009`, `1`, `2008-08-16 00:00:00`, `492481`, `10001`, `9986`, `1`), 
+       (`10`, `1`, `1`, `2008/2009`, `10`, `2008-08-11 00:00:00`, `492564`, `8342`, `8571`, `4`);
+
+INSERT INTO `player`
+VALUES (`1`, `505942`, `Aaron Appindangoye`, `1992-02-29 00:00:00`, `182.88`, `187`), 
+       (`2`, `155782`, `Aaron Cresswell`, `1989-12-15 00:00:00`, `170.18`, `146`), 
+       (`3`, `162549`, `Aaron Doran`, `1991-05-13 00:00:00`, `170.18`, `163`), 
+       (`4`, `30572`, `Aaron Galindo`, `1982-05-08 00:00:00`, `182.88`, `198`), 
+       (`5`, `23780`, `Aaron Hughes`, `1979-11-08 00:00:00`, `182.88`, `154`), 
+       (`6`, `27316`, `Aaron Hunt`, `1986-09-04 00:00:00`, `182.88`, `161`), 
+       (`7`, `564793`, `Aaron Kuhl`, `1996-01-30 00:00:00`, `172.72`, `146`), 
+       (`8`, `30895`, `Aaron Lennon`, `1987-04-16 00:00:00`, `165.1`, `139`), 
+       (`9`, `528212`, `Aaron Lennox`, `1993-02-19 00:00:00`, `190.5`, `181`), 
+       (`10`, `101042`, `Aaron Meijers`, `1987-10-28 00:00:00`, `175.26`, `170`);
+
+INSERT INTO `team`
+VALUES (`1`, `9987`, `KRC Genk`, `GEN`), 
+       (`2`, `9993`, `Beerschot AC`, `BAC`), 
+       (`3`, `10000`, `SV Zulte-Waregem`, `ZUL`), 
+       (`4`, `9994`, `Sporting Lokeren`, `LOK`), 
+       (`5`, `9984`, `KSV Cercle Brugge`, `CEB`), 
+       (`6`, `8635`, `RSC Anderlecht`, `AND`), 
+       (`7`, `9991`, `KAA Gent`, `GEN`), 
+       (`8`, `9998`, `RAEC Mons`, `MON`), 
+       (`9`, `7947`, `FCV Dender EH`, `DEN`), 
+       (`10`, `9985`, `Standard de Liége`, `STL`);
 
 # This is an excerpt of deployment.spec.template.spec
   volumes:
